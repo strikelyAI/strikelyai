@@ -1,0 +1,215 @@
+fixture_id,date,status,home_team,away_team,home_goals,away_goals,venue,round
+1034678,2023-06-27 13:00:00+00:00,FT,Atlètic Club d'Escaldes,Buducnost Podgorica,0,3,Kópavogsvöllur,Preliminary Round
+1034679,2023-06-27 19:00:00+00:00,FT,Tre Penne,Breidablik,1,7,Kópavogsvöllur,Preliminary Round
+1042850,2023-06-30 19:00:00+00:00,FT,Buducnost Podgorica,Breidablik,0,5,Kópavogsvöllur,Preliminary Round
+1036636,2023-07-11 15:00:00+00:00,FT,FC Urartu,Zrinjski,0,1,Urartu Stadium,1st Qualifying Round
+1036626,2023-07-11 15:30:00+00:00,FT,Lincoln Red Imps FC,Qarabag,1,2,Victoria Stadium,1st Qualifying Round
+1036618,2023-07-11 16:00:00+00:00,FT,FK Zalgiris Vilnius,Struga,0,0,Vilniaus LFF stadionas,1st Qualifying Round
+1036622,2023-07-11 18:00:00+00:00,FT,Olimpija Ljubljana,Valmiera / BSS,2,1,Stadion Stožice,1st Qualifying Round
+1036628,2023-07-11 18:00:00+00:00,FT,Raków Częstochowa,Flora Tallinn,1,0,Miejski Stadion Piłkarski Raków,1st Qualifying Round
+1036634,2023-07-11 18:00:00+00:00,FT,Hamrun Spartans,Maccabi Haifa,0,4,MFA Centenary Stadium,1st Qualifying Round
+1047017,2023-07-11 18:45:00+00:00,FT,Shamrock Rovers,Breidablik,0,1,Tallaght Stadium,1st Qualifying Round
+1036620,2023-07-11 18:45:00+00:00,FT,KI Klaksvik,Ferencvarosi TC,0,0,Við Djúpumýrar,1st Qualifying Round
+1036638,2023-07-11 18:45:00+00:00,FT,Partizani,Bate Borisov,1,1,Air Albania Stadium,1st Qualifying Round
+1036616,2023-07-11 18:45:00+00:00,FT,Ballkani,Ludogorets,2,0,Stadiumi Fadil Vokrri,1st Qualifying Round
+1036640,2023-07-12 14:00:00+00:00,FT,FC Astana,Dinamo Tbilisi,1,1,Astana Arena,1st Qualifying Round
+1036624,2023-07-12 16:00:00+00:00,FT,HJK helsinki,Larne,1,0,Bolt Arena,1st Qualifying Round
+1036614,2023-07-12 17:00:00+00:00,FT,BK Hacken,The New Saints,3,1,Bravida Arena,1st Qualifying Round
+1036632,2023-07-12 17:30:00+00:00,FT,Farul Constanta,Sheriff Tiraspol,1,0,Stadionul Central,1st Qualifying Round
+1036630,2023-07-12 18:30:00+00:00,FT,Slovan Bratislava,Swift Hesperange,1,1,Štadión Tehelné pole,1st Qualifying Round
+1036619,2023-07-18 15:00:00+00:00,FT,Struga,FK Zalgiris Vilnius,1,2,Stadion Biljanini Izvori,1st Qualifying Round
+1036633,2023-07-18 17:00:00+00:00,AET,Sheriff Tiraspol,Farul Constanta,3,0,Bolshaya Sportivnaya Arena,1st Qualifying Round
+1036629,2023-07-18 17:00:00+00:00,FT,Flora Tallinn,Raków Częstochowa,0,3,A. Le Coq Arena,1st Qualifying Round
+1036635,2023-07-18 17:00:00+00:00,FT,Maccabi Haifa,Hamrun Spartans,2,1,Sammy Ofer Stadium,1st Qualifying Round
+1036615,2023-07-18 18:00:00+00:00,FT,The New Saints,BK Hacken,0,2,Park Hall Stadium,1st Qualifying Round
+1036639,2023-07-18 18:00:00+00:00,FT,Bate Borisov,Partizani,2,0,Városi Stadion,1st Qualifying Round
+1036637,2023-07-18 18:00:00+00:00,PEN,Zrinjski,FC Urartu,2,3,Stadion Bijeli Brijeg,1st Qualifying Round
+1047018,2023-07-18 19:15:00+00:00,FT,Breidablik,Shamrock Rovers,2,1,Kópavogsvöllur,1st Qualifying Round
+1036623,2023-07-19 15:00:00+00:00,FT,Valmiera / BSS,Olimpija Ljubljana,1,2,J. Daliņa stadions,1st Qualifying Round
+1036627,2023-07-19 16:00:00+00:00,FT,Qarabag,Lincoln Red Imps FC,4,0,Bakı Olimpiya Stadionu,1st Qualifying Round
+1036621,2023-07-19 16:00:00+00:00,FT,Ferencvarosi TC,KI Klaksvik,0,3,Groupama Aréna,1st Qualifying Round
+1036641,2023-07-19 16:00:00+00:00,FT,Dinamo Tbilisi,FC Astana,1,2,Boris Paichadze Dinamo Arena,1st Qualifying Round
+1036617,2023-07-19 18:00:00+00:00,FT,Ludogorets,Ballkani,4,0,Huvepharma Arena,1st Qualifying Round
+1036631,2023-07-19 18:00:00+00:00,FT,Swift Hesperange,Slovan Bratislava,0,2,Stade de Luxembourg,1st Qualifying Round
+1036625,2023-07-19 18:30:00+00:00,AET,Larne,HJK helsinki,2,2,Solitude,1st Qualifying Round
+1074580,2023-07-25 16:00:00+00:00,FT,FK Zalgiris Vilnius,Galatasaray,2,2,Vilniaus LFF stadionas,2nd Qualifying Round
+1074592,2023-07-25 16:00:00+00:00,FT,HJK helsinki,Molde,1,0,Bolt Arena,2nd Qualifying Round
+1074582,2023-07-25 18:00:00+00:00,FT,Dinamo Zagreb,FC Astana,4,0,Stadion Maksimir,2nd Qualifying Round
+1037423,2023-07-25 18:00:00+00:00,FT,Dnipro-1,Panathinaikos,1,3,Košická futbalová aréna,2nd Qualifying Round
+1037425,2023-07-25 18:30:00+00:00,FT,Servette FC,Genk,1,1,Stade de Genève,2nd Qualifying Round
+1074584,2023-07-25 19:00:00+00:00,FT,Zrinjski,Slovan Bratislava,0,1,Stadion Bijeli Brijeg,2nd Qualifying Round
+1074586,2023-07-25 19:15:00+00:00,FT,Breidablik,FC Copenhagen,0,2,Kópavogsvöllur,2nd Qualifying Round
+1074596,2023-07-26 17:00:00+00:00,FT,Sheriff Tiraspol,Maccabi Haifa,1,0,Bolshaya Sportivnaya Arena,2nd Qualifying Round
+1074594,2023-07-26 17:00:00+00:00,FT,Aris,Bate Borisov,6,2,Alphamega Stadium,2nd Qualifying Round
+1074598,2023-07-26 18:15:00+00:00,FT,Raków Częstochowa,Qarabag,3,2,Miejski Stadion Piłkarski Raków,2nd Qualifying Round
+1074588,2023-07-26 18:45:00+00:00,FT,Ludogorets,Olimpija Ljubljana,1,1,Huvepharma Arena,2nd Qualifying Round
+1074590,2023-07-26 18:45:00+00:00,FT,KI Klaksvik,BK Hacken,0,0,Við Djúpumýrar,2nd Qualifying Round
+1037424,2023-08-01 17:30:00+00:00,FT,Panathinaikos,Dnipro-1,2,2,Stadio Apóstolos Nikolaidis,2nd Qualifying Round
+1074595,2023-08-01 18:00:00+00:00,FT,Bate Borisov,Aris,3,5,Városi Stadion,2nd Qualifying Round
+1074589,2023-08-01 18:00:00+00:00,FT,Olimpija Ljubljana,Ludogorets,2,1,Stadion Stožice,2nd Qualifying Round
+1074585,2023-08-01 18:30:00+00:00,FT,Slovan Bratislava,Zrinjski,2,2,Štadión Tehelné pole,2nd Qualifying Round
+1074583,2023-08-02 14:00:00+00:00,FT,FC Astana,Dinamo Zagreb,0,2,Astana Arena,2nd Qualifying Round
+1074599,2023-08-02 16:00:00+00:00,FT,Qarabag,Raków Częstochowa,1,1,Bakı Olimpiya Stadionu,2nd Qualifying Round
+1074593,2023-08-02 17:00:00+00:00,FT,Molde,HJK helsinki,2,0,Aker Stadion,2nd Qualifying Round
+1074591,2023-08-02 17:00:00+00:00,PEN,BK Hacken,KI Klaksvik,3,3,Bravida Arena,2nd Qualifying Round
+1037426,2023-08-02 17:00:00+00:00,PEN,Genk,Servette FC,2,2,Cegeka Arena,2nd Qualifying Round
+1074597,2023-08-02 17:00:00+00:00,AET,Maccabi Haifa,Sheriff Tiraspol,4,1,Sammy Ofer Stadium,2nd Qualifying Round
+1074587,2023-08-02 18:00:00+00:00,FT,FC Copenhagen,Breidablik,6,3,Parken,2nd Qualifying Round
+1074581,2023-08-02 18:30:00+00:00,FT,Galatasaray,FK Zalgiris Vilnius,1,0,Rams Global Stadium,2nd Qualifying Round
+1104353,2023-08-08 18:00:00+00:00,FT,FC Copenhagen,Sparta Praha,0,0,Parken,3rd Qualifying Round
+1104345,2023-08-08 18:00:00+00:00,FT,Raków Częstochowa,Aris,2,1,Miejski Stadion Piłkarski Raków,3rd Qualifying Round
+1094648,2023-08-08 18:30:00+00:00,FT,PSV Eindhoven,Sturm Graz,4,1,Philips Stadion,3rd Qualifying Round
+1104355,2023-08-08 18:45:00+00:00,FT,KI Klaksvik,Molde,2,1,Tórsvøllur,3rd Qualifying Round
+1094646,2023-08-08 19:00:00+00:00,FT,SC Braga,TSC Backa Topola,3,0,Estádio Municipal de Braga,3rd Qualifying Round
+1104351,2023-08-08 19:00:00+00:00,FT,Olimpija Ljubljana,Galatasaray,0,3,Stadion Stožice,3rd Qualifying Round
+1102897,2023-08-09 18:00:00+00:00,FT,Panathinaikos,Marseille,1,0,Stadio Apóstolos Nikolaidis,3rd Qualifying Round
+1104347,2023-08-09 18:30:00+00:00,FT,Slovan Bratislava,Maccabi Haifa,1,2,Štadión Tehelné pole,3rd Qualifying Round
+1104357,2023-08-09 18:45:00+00:00,FT,Rangers,Servette FC,2,1,Ibrox Stadium,3rd Qualifying Round
+1104356,2023-08-15 17:00:00+00:00,AET,Molde,KI Klaksvik,2,0,Aker Stadion,3rd Qualifying Round
+1104354,2023-08-15 17:00:00+00:00,PEN,Sparta Praha,FC Copenhagen,3,3,epet ARENA,3rd Qualifying Round
+1104346,2023-08-15 17:00:00+00:00,FT,Aris,Raków Częstochowa,0,1,Alphamega Stadium,3rd Qualifying Round
+1104348,2023-08-15 17:00:00+00:00,FT,Maccabi Haifa,Slovan Bratislava,3,1,Sammy Ofer Stadium,3rd Qualifying Round
+1104350,2023-08-15 18:00:00+00:00,FT,Dinamo Zagreb,AEK Athens FC,1,2,Stadion Maksimir,3rd Qualifying Round
+1104352,2023-08-15 18:00:00+00:00,FT,Galatasaray,Olimpija Ljubljana,1,0,Rams Global Stadium,3rd Qualifying Round
+1094647,2023-08-15 18:00:00+00:00,FT,TSC Backa Topola,SC Braga,1,4,TSC Arena,3rd Qualifying Round
+1094649,2023-08-15 18:30:00+00:00,FT,Sturm Graz,PSV Eindhoven,1,3,Merkur Arena,3rd Qualifying Round
+1104358,2023-08-15 18:30:00+00:00,FT,Servette FC,Rangers,1,1,Stade de Genève,3rd Qualifying Round
+1102898,2023-08-15 19:00:00+00:00,PEN,Marseille,Panathinaikos,2,1,Stade Orange Vélodrome,3rd Qualifying Round
+1104349,2023-08-19 18:45:00+00:00,FT,AEK Athens FC,Dinamo Zagreb,2,2,OPAP Arena,3rd Qualifying Round
+1119326,2023-08-22 19:00:00+00:00,FT,Rangers,PSV Eindhoven,2,2,Ibrox Stadium,Play-offs
+1121330,2023-08-22 19:00:00+00:00,FT,Antwerp,AEK Athens FC,1,0,Bosuilstadion,Play-offs
+1119328,2023-08-22 19:00:00+00:00,FT,Raków Częstochowa,FC Copenhagen,0,1,ArcelorMittal Park,Play-offs
+1119332,2023-08-23 19:00:00+00:00,FT,SC Braga,Panathinaikos,2,1,Estádio Municipal de Braga,Play-offs
+1119334,2023-08-23 19:00:00+00:00,FT,Molde,Galatasaray,2,3,Aker Stadion,Play-offs
+1119330,2023-08-23 19:00:00+00:00,FT,Maccabi Haifa,BSC Young Boys,0,0,Sammy Ofer Stadium,Play-offs
+1119331,2023-08-29 19:00:00+00:00,FT,BSC Young Boys,Maccabi Haifa,3,0,Stadion Wankdorf,Play-offs
+1119333,2023-08-29 19:00:00+00:00,FT,Panathinaikos,SC Braga,0,1,Olympiako Stadio Spyros Louis,Play-offs
+1119335,2023-08-29 19:00:00+00:00,FT,Galatasaray,Molde,2,1,Rams Global Stadium,Play-offs
+1119327,2023-08-30 19:00:00+00:00,FT,PSV Eindhoven,Rangers,5,1,Philips Stadion,Play-offs
+1119329,2023-08-30 19:00:00+00:00,FT,FC Copenhagen,Raków Częstochowa,1,1,Parken,Play-offs
+1121331,2023-08-30 19:00:00+00:00,FT,AEK Athens FC,Antwerp,1,2,OPAP Arena,Play-offs
+1126144,2023-09-19 16:45:00+00:00,FT,AC Milan,Newcastle,0,0,Stadio Giuseppe Meazza,Group F - 1
+1126145,2023-09-19 16:45:00+00:00,FT,BSC Young Boys,RB Leipzig,1,3,Stadion Wankdorf,Group G - 1
+1126149,2023-09-19 19:00:00+00:00,FT,Manchester City,FK Crvena Zvezda,3,1,Etihad Stadium,Group G - 1
+1126148,2023-09-19 19:00:00+00:00,FT,Paris Saint Germain,Borussia Dortmund,2,0,Parc des Princes,Group F - 1
+1126146,2023-09-19 19:00:00+00:00,FT,Feyenoord,Celtic,2,0,Stadion Feijenoord,Group E - 1
+1126147,2023-09-19 19:00:00+00:00,FT,Lazio,Atletico Madrid,1,1,Stadio Olimpico,Group E - 1
+1126150,2023-09-19 19:00:00+00:00,FT,Barcelona,Antwerp,5,0,Estadi Olímpic Lluís Companys,Group H - 1
+1126151,2023-09-19 19:00:00+00:00,FT,Shakhtar Donetsk,FC Porto,1,3,Volksparkstadion,Group H - 1
+1126153,2023-09-20 16:45:00+00:00,FT,Real Madrid,Union Berlin,1,0,Estadio Santiago Bernabéu,Group C - 1
+1126152,2023-09-20 16:45:00+00:00,FT,Galatasaray,FC Copenhagen,2,2,RAMS Park,Group A - 1
+1126156,2023-09-20 19:00:00+00:00,FT,Arsenal,PSV Eindhoven,4,0,Emirates Stadium,Group B - 1
+1126154,2023-09-20 19:00:00+00:00,FT,Bayern Munich,Manchester United,4,3,Allianz Arena,Group A - 1
+1126158,2023-09-20 19:00:00+00:00,FT,Benfica,Red Bull Salzburg,0,2,Estádio do Sport Lisboa e Benfica,Group D - 1
+1126157,2023-09-20 19:00:00+00:00,FT,SC Braga,Napoli,1,2,Estádio Municipal de Braga,Group C - 1
+1126155,2023-09-20 19:00:00+00:00,FT,Sevilla,Lens,1,1,Estadio Ramón Sánchez Pizjuán,Group B - 1
+1126159,2023-09-20 19:00:00+00:00,FT,Real Sociedad,Inter,1,1,Reale Arena,Group D - 1
+1126160,2023-10-03 16:45:00+00:00,FT,Union Berlin,SC Braga,2,3,Olympiastadion Berlin,Group C - 2
+1126161,2023-10-03 16:45:00+00:00,FT,Red Bull Salzburg,Real Sociedad,0,2,Red Bull Arena,Group D - 2
+1126162,2023-10-03 19:00:00+00:00,FT,Manchester United,Galatasaray,2,3,Old Trafford,Group A - 2
+1126164,2023-10-03 19:00:00+00:00,FT,Lens,Arsenal,2,1,Stade Bollaert-Delelis,Group B - 2
+1126165,2023-10-03 19:00:00+00:00,FT,PSV Eindhoven,Sevilla,2,2,Philips Stadion,Group B - 2
+1126163,2023-10-03 19:00:00+00:00,FT,FC Copenhagen,Bayern Munich,1,2,Parken,Group A - 2
+1126166,2023-10-03 19:00:00+00:00,FT,Napoli,Real Madrid,2,3,Stadio Diego Armando Maradona,Group C - 2
+1126167,2023-10-03 19:00:00+00:00,FT,Inter,Benfica,1,0,Stadio Giuseppe Meazza,Group D - 2
+1126168,2023-10-04 16:45:00+00:00,FT,Atletico Madrid,Feyenoord,3,2,Estádio Cívitas Metropolitano,Group E - 2
+1126169,2023-10-04 16:45:00+00:00,FT,Antwerp,Shakhtar Donetsk,2,3,Bosuilstadion,Group H - 2
+1126172,2023-10-04 19:00:00+00:00,FT,Newcastle,Paris Saint Germain,4,1,St. James' Park,Group F - 2
+1126171,2023-10-04 19:00:00+00:00,FT,Borussia Dortmund,AC Milan,0,0,SIGNAL IDUNA PARK,Group F - 2
+1126173,2023-10-04 19:00:00+00:00,FT,RB Leipzig,Manchester City,1,3,Red Bull Arena,Group G - 2
+1126175,2023-10-04 19:00:00+00:00,FT,FC Porto,Barcelona,0,1,Estádio Do Dragão,Group H - 2
+1126170,2023-10-04 19:00:00+00:00,FT,Celtic,Lazio,1,2,Celtic Park,Group E - 2
+1126174,2023-10-04 19:00:00+00:00,FT,FK Crvena Zvezda,BSC Young Boys,2,2,Stadion Rajko Mitić,Group G - 2
+1126177,2023-10-24 16:45:00+00:00,FT,Inter,Red Bull Salzburg,2,1,Stadio Giuseppe Meazza,Group D - 3
+1126176,2023-10-24 16:45:00+00:00,FT,Galatasaray,Bayern Munich,1,3,RAMS Park,Group A - 3
+1126178,2023-10-24 19:00:00+00:00,FT,Manchester United,FC Copenhagen,1,0,Old Trafford,Group A - 3
+1126179,2023-10-24 19:00:00+00:00,FT,Lens,PSV Eindhoven,1,1,Stade Bollaert-Delelis,Group B - 3
+1126182,2023-10-24 19:00:00+00:00,FT,Union Berlin,Napoli,0,1,Olympiastadion Berlin,Group C - 3
+1126183,2023-10-24 19:00:00+00:00,FT,Benfica,Real Sociedad,0,1,Estádio do Sport Lisboa e Benfica,Group D - 3
+1126181,2023-10-24 19:00:00+00:00,FT,SC Braga,Real Madrid,1,2,Estádio Municipal de Braga,Group C - 3
+1126180,2023-10-24 19:00:00+00:00,FT,Sevilla,Arsenal,1,2,Estadio Ramón Sánchez Pizjuán,Group B - 3
+1126184,2023-10-25 16:45:00+00:00,FT,Feyenoord,Lazio,3,1,Stadion Feijenoord,Group E - 3
+1126185,2023-10-25 16:45:00+00:00,FT,Barcelona,Shakhtar Donetsk,2,1,Estadi Olímpic Lluís Companys,Group H - 3
+1126188,2023-10-25 19:00:00+00:00,FT,Newcastle,Borussia Dortmund,0,1,St. James' Park,Group F - 3
+1126187,2023-10-25 19:00:00+00:00,FT,Paris Saint Germain,AC Milan,3,0,Parc des Princes,Group F - 3
+1126189,2023-10-25 19:00:00+00:00,FT,RB Leipzig,FK Crvena Zvezda,3,1,Red Bull Arena,Group G - 3
+1126186,2023-10-25 19:00:00+00:00,FT,Celtic,Atletico Madrid,2,2,Celtic Park,Group E - 3
+1126190,2023-10-25 19:00:00+00:00,FT,BSC Young Boys,Manchester City,1,3,Stadion Wankdorf,Group G - 3
+1126191,2023-10-25 19:00:00+00:00,FT,Antwerp,FC Porto,1,4,Bosuilstadion,Group H - 3
+1126192,2023-11-07 17:45:00+00:00,FT,Borussia Dortmund,Newcastle,2,0,SIGNAL IDUNA PARK,Group F - 4
+1126193,2023-11-07 17:45:00+00:00,FT,Shakhtar Donetsk,Barcelona,1,0,Volksparkstadion,Group H - 4
+1126197,2023-11-07 20:00:00+00:00,FT,Manchester City,BSC Young Boys,3,0,Etihad Stadium,Group G - 4
+1126199,2023-11-07 20:00:00+00:00,FT,FC Porto,Antwerp,2,0,Estádio Do Dragão,Group H - 4
+1126195,2023-11-07 20:00:00+00:00,FT,Lazio,Feyenoord,1,0,Stadio Olimpico,Group E - 4
+1126196,2023-11-07 20:00:00+00:00,FT,AC Milan,Paris Saint Germain,2,1,Stadio Giuseppe Meazza,Group F - 4
+1126194,2023-11-07 20:00:00+00:00,FT,Atletico Madrid,Celtic,6,0,Estádio Cívitas Metropolitano,Group E - 4
+1126198,2023-11-07 20:00:00+00:00,FT,FK Crvena Zvezda,RB Leipzig,1,2,Stadion Rajko Mitić,Group G - 4
+1126200,2023-11-08 17:45:00+00:00,FT,Napoli,Union Berlin,1,1,Stadio Diego Armando Maradona,Group C - 4
+1126201,2023-11-08 17:45:00+00:00,FT,Real Sociedad,Benfica,3,1,Reale Arena,Group D - 4
+1126204,2023-11-08 20:00:00+00:00,FT,Arsenal,Sevilla,2,0,Emirates Stadium,Group B - 4
+1126202,2023-11-08 20:00:00+00:00,FT,Bayern Munich,Galatasaray,2,1,Allianz Arena,Group A - 4
+1126205,2023-11-08 20:00:00+00:00,FT,PSV Eindhoven,Lens,1,0,Philips Stadion,Group B - 4
+1126203,2023-11-08 20:00:00+00:00,FT,FC Copenhagen,Manchester United,4,3,Parken,Group A - 4
+1126206,2023-11-08 20:00:00+00:00,FT,Real Madrid,SC Braga,3,0,Estadio Santiago Bernabéu,Group C - 4
+1126207,2023-11-08 20:00:00+00:00,FT,Red Bull Salzburg,Inter,0,1,Red Bull Arena,Group D - 4
+1126208,2023-11-28 17:45:00+00:00,FT,Lazio,Celtic,2,0,Stadio Olimpico,Group E - 5
+1126209,2023-11-28 17:45:00+00:00,FT,Shakhtar Donetsk,Antwerp,1,0,Volksparkstadion,Group H - 5
+1126213,2023-11-28 20:00:00+00:00,FT,Manchester City,RB Leipzig,3,2,Etihad Stadium,Group G - 5
+1126211,2023-11-28 20:00:00+00:00,FT,Paris Saint Germain,Newcastle,1,1,Parc des Princes,Group F - 5
+1126210,2023-11-28 20:00:00+00:00,FT,Feyenoord,Atletico Madrid,1,3,Stadion Feijenoord,Group E - 5
+1126212,2023-11-28 20:00:00+00:00,FT,AC Milan,Borussia Dortmund,1,3,Stadio Giuseppe Meazza,Group F - 5
+1126215,2023-11-28 20:00:00+00:00,FT,Barcelona,FC Porto,2,1,Estadi Olímpic Lluís Companys,Group H - 5
+1126214,2023-11-28 20:00:00+00:00,FT,BSC Young Boys,FK Crvena Zvezda,2,0,Stadion Wankdorf,Group G - 5
+1126217,2023-11-29 17:45:00+00:00,FT,Sevilla,PSV Eindhoven,2,3,Estadio Ramón Sánchez Pizjuán,Group B - 5
+1126216,2023-11-29 17:45:00+00:00,FT,Galatasaray,Manchester United,3,3,RAMS Park,Group A - 5
+1126219,2023-11-29 20:00:00+00:00,FT,Arsenal,Lens,6,0,Emirates Stadium,Group B - 5
+1126218,2023-11-29 20:00:00+00:00,FT,Bayern Munich,FC Copenhagen,0,0,Allianz Arena,Group A - 5
+1126222,2023-11-29 20:00:00+00:00,FT,Benfica,Inter,3,3,Estádio do Sport Lisboa e Benfica,Group D - 5
+1126221,2023-11-29 20:00:00+00:00,FT,SC Braga,Union Berlin,1,1,Estádio Municipal de Braga,Group C - 5
+1126220,2023-11-29 20:00:00+00:00,FT,Real Madrid,Napoli,4,2,Estadio Santiago Bernabéu,Group C - 5
+1126223,2023-11-29 20:00:00+00:00,FT,Real Sociedad,Red Bull Salzburg,0,0,Reale Arena,Group D - 5
+1126224,2023-12-12 17:45:00+00:00,FT,Lens,Sevilla,2,1,Stade Bollaert-Delelis,Group B - 6
+1126225,2023-12-12 17:45:00+00:00,FT,PSV Eindhoven,Arsenal,1,1,Philips Stadion,Group B - 6
+1126226,2023-12-12 20:00:00+00:00,FT,Manchester United,Bayern Munich,0,1,Old Trafford,Group A - 6
+1126229,2023-12-12 20:00:00+00:00,FT,Union Berlin,Real Madrid,2,3,Olympiastadion Berlin,Group C - 6
+1126227,2023-12-12 20:00:00+00:00,FT,FC Copenhagen,Galatasaray,1,0,Parken,Group A - 6
+1126228,2023-12-12 20:00:00+00:00,FT,Napoli,SC Braga,2,0,Stadio Diego Armando Maradona,Group C - 6
+1126230,2023-12-12 20:00:00+00:00,FT,Inter,Real Sociedad,0,0,Stadio Giuseppe Meazza,Group D - 6
+1126231,2023-12-12 20:00:00+00:00,FT,Red Bull Salzburg,Benfica,1,3,Red Bull Arena,Group D - 6
+1126232,2023-12-13 17:45:00+00:00,FT,RB Leipzig,BSC Young Boys,2,1,Red Bull Arena,Group G - 6
+1126233,2023-12-13 17:45:00+00:00,FT,FK Crvena Zvezda,Manchester City,2,3,Stadion Rajko Mitić,Group G - 6
+1126237,2023-12-13 20:00:00+00:00,FT,Newcastle,AC Milan,1,2,St. James' Park,Group F - 6
+1126236,2023-12-13 20:00:00+00:00,FT,Borussia Dortmund,Paris Saint Germain,1,1,SIGNAL IDUNA PARK,Group F - 6
+1126238,2023-12-13 20:00:00+00:00,FT,FC Porto,Shakhtar Donetsk,5,3,Estádio Do Dragão,Group H - 6
+1126235,2023-12-13 20:00:00+00:00,FT,Celtic,Feyenoord,2,1,Celtic Park,Group E - 6
+1126234,2023-12-13 20:00:00+00:00,FT,Atletico Madrid,Lazio,2,0,Estádio Cívitas Metropolitano,Group E - 6
+1126239,2023-12-13 20:00:00+00:00,FT,Antwerp,Barcelona,3,2,Bosuilstadion,Group H - 6
+1149512,2024-02-13 20:00:00+00:00,FT,RB Leipzig,Real Madrid,0,1,Red Bull Arena,Round of 16
+1149510,2024-02-13 20:00:00+00:00,FT,FC Copenhagen,Manchester City,1,3,Parken,Round of 16
+1149514,2024-02-14 20:00:00+00:00,FT,Paris Saint Germain,Real Sociedad,2,0,Parc des Princes,Round of 16
+1149516,2024-02-14 20:00:00+00:00,FT,Lazio,Bayern Munich,1,0,Stadio Olimpico,Round of 16
+1149520,2024-02-20 20:00:00+00:00,FT,PSV Eindhoven,Borussia Dortmund,1,1,Philips Stadion,Round of 16
+1149518,2024-02-20 20:00:00+00:00,FT,Inter,Atletico Madrid,1,0,Stadio Giuseppe Meazza,Round of 16
+1149522,2024-02-21 20:00:00+00:00,FT,FC Porto,Arsenal,1,0,Estádio Do Dragão,Round of 16
+1149524,2024-02-21 20:00:00+00:00,FT,Napoli,Barcelona,1,1,Stadio Diego Armando Maradona,Round of 16
+1149517,2024-03-05 20:00:00+00:00,FT,Bayern Munich,Lazio,3,0,Allianz Arena,Round of 16
+1149515,2024-03-05 20:00:00+00:00,FT,Real Sociedad,Paris Saint Germain,1,2,Reale Arena,Round of 16
+1149511,2024-03-06 20:00:00+00:00,FT,Manchester City,FC Copenhagen,3,1,Etihad Stadium,Round of 16
+1149513,2024-03-06 20:00:00+00:00,FT,Real Madrid,RB Leipzig,1,1,Estadio Santiago Bernabéu,Round of 16
+1149523,2024-03-12 20:00:00+00:00,PEN,Arsenal,FC Porto,1,0,Emirates Stadium,Round of 16
+1149525,2024-03-12 20:00:00+00:00,FT,Barcelona,Napoli,3,1,Estadi Olímpic Lluís Companys,Round of 16
+1149521,2024-03-13 20:00:00+00:00,FT,Borussia Dortmund,PSV Eindhoven,2,0,SIGNAL IDUNA PARK,Round of 16
+1149519,2024-03-13 20:00:00+00:00,PEN,Atletico Madrid,Inter,2,1,Estádio Cívitas Metropolitano,Round of 16
+1184777,2024-04-09 19:00:00+00:00,FT,Arsenal,Bayern Munich,2,2,Emirates Stadium,Quarter-finals
+1184779,2024-04-09 19:00:00+00:00,FT,Real Madrid,Manchester City,3,3,Estadio Santiago Bernabéu,Quarter-finals
+1184783,2024-04-10 19:00:00+00:00,FT,Paris Saint Germain,Barcelona,2,3,Parc des Princes,Quarter-finals
+1184781,2024-04-10 19:00:00+00:00,FT,Atletico Madrid,Borussia Dortmund,2,1,Estádio Cívitas Metropolitano,Quarter-finals
+1184782,2024-04-16 19:00:00+00:00,FT,Borussia Dortmund,Atletico Madrid,4,2,SIGNAL IDUNA PARK,Quarter-finals
+1184784,2024-04-16 19:00:00+00:00,FT,Barcelona,Paris Saint Germain,1,4,Estadi Olímpic Lluís Companys,Quarter-finals
+1184780,2024-04-17 19:00:00+00:00,PEN,Manchester City,Real Madrid,1,1,Etihad Stadium,Quarter-finals
+1184778,2024-04-17 19:00:00+00:00,FT,Bayern Munich,Arsenal,1,0,Allianz Arena,Quarter-finals
+1196543,2024-04-30 19:00:00+00:00,FT,Bayern Munich,Real Madrid,2,2,Allianz Arena,Semi-finals
+1196501,2024-05-01 19:00:00+00:00,FT,Borussia Dortmund,Paris Saint Germain,1,0,SIGNAL IDUNA PARK,Semi-finals
+1196502,2024-05-07 19:00:00+00:00,FT,Paris Saint Germain,Borussia Dortmund,0,1,Parc des Princes,Semi-finals
+1196544,2024-05-08 19:00:00+00:00,FT,Real Madrid,Bayern Munich,2,1,Estadio Santiago Bernabéu,Semi-finals
+1199389,2024-06-01 19:00:00+00:00,FT,Borussia Dortmund,Real Madrid,0,2,Wembley Stadium,Final
