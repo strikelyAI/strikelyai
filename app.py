@@ -4,11 +4,10 @@
 
 import streamlit as st
 import pandas as pd
-import numpy as np
 from PIL import Image
 
 # =========================
-# CONFIGURACIÓN DE PÁGINA
+# CONFIGURACIÓN
 # =========================
 st.set_page_config(
     page_title="StrikelyAI",
@@ -27,17 +26,17 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =========================
-# LOGO
+# HEADER
 # =========================
 logo = Image.open("assets/logo.png")
-st.image(logo, width=180)
+st.image(logo, width=170)
 st.title("StrikelyAI")
-st.caption("Análisis inteligente de probabilidades de fútbol europeo")
+st.caption("Recomendaciones inteligentes basadas en valor estadístico")
 
 st.divider()
 
 # =========================
-# CARGA DE DATOS
+# DATOS
 # =========================
 @st.cache_data
 def cargar_datos():
@@ -45,186 +44,155 @@ def cargar_datos():
 
 df = cargar_datos()
 
-# =========================
-# DETECTAR COLUMNA DE LIGA
-# =========================
 def detectar_columna_liga(df):
-    for col in ["League", "Div", "competition", "Comp", "Liga"]:
+    for col in ["League", "Div", "competition", "Comp"]:
         if col in df.columns:
             return col
     return None
 
 col_liga = detectar_columna_liga(df)
-
-if col_liga is None:
-    st.error("❌ No se pudo detectar la columna de liga.")
-    st.write(df.columns.tolist())
+if not col_liga:
+    st.error("No se detectó columna de liga")
     st.stop()
 
 # =========================
-# MAPA DE LIGAS (UX)
+# MAPA DE LIGAS
 # =========================
 MAPA_LIGAS = {
-    "E0": "Premier League (Inglaterra)",
-    "E1": "Championship (Inglaterra)",
-    "E2": "League One (Inglaterra)",
-    "E3": "League Two (Inglaterra)",
-    "EC": "Conference League (Inglaterra)",
-    "SP1": "LaLiga (España)",
-    "SP2": "LaLiga Hypermotion (España)",
-    "D1": "Bundesliga (Alemania)",
-    "D2": "2. Bundesliga (Alemania)",
-    "I1": "Serie A (Italia)",
-    "I2": "Serie B (Italia)",
-    "F1": "Ligue 1 (Francia)",
-    "F2": "Ligue 2 (Francia)",
-    "SC0": "Scottish Premiership",
-    "SC1": "Scottish Championship",
-    "SC2": "Scottish League One",
-    "SC3": "Scottish League Two",
-    "N1": "Eredivisie (Países Bajos)",
-    "B1": "Jupiler Pro League (Bélgica)",
-    "P1": "Primeira Liga (Portugal)",
-    "T1": "Süper Lig (Turquía)",
-    "G1": "Super League (Grecia)"
+    "E0": "Premier League",
+    "SP1": "LaLiga",
+    "D1": "Bundesliga",
+    "I1": "Serie A",
+    "F1": "Ligue 1",
+    "N1": "Eredivisie",
+    "P1": "Primeira Liga",
+    "B1": "Jupiler Pro League",
+    "T1": "Süper Lig",
+    "G1": "Super League"
 }
 
-ligas_codigo = sorted(df[col_liga].dropna().unique())
+ligas_cod = sorted(df[col_liga].unique())
+ligas_ui = {MAPA_LIGAS.get(l, l): l for l in ligas_cod}
 
-ligas_legibles = {
-    MAPA_LIGAS.get(cod, cod): cod
-    for cod in ligas_codigo
-}
+liga_ui = st.selectbox("🏆 Liga", list(ligas_ui.keys()))
+liga = ligas_ui[liga_ui]
 
-liga_mostrada = st.selectbox(
-    "🏆 Selecciona la liga",
-    list(ligas_legibles.keys())
-)
-
-liga_seleccionada = ligas_legibles[liga_mostrada]
-df_liga = df[df[col_liga] == liga_seleccionada]
+df_liga = df[df[col_liga] == liga]
 
 # =========================
-# SELECTOR DE EQUIPOS
+# EQUIPOS
 # =========================
 equipos = sorted(
-    pd.concat([df_liga["HomeTeam"], df_liga["AwayTeam"]]).dropna().unique()
+    pd.concat([df_liga["HomeTeam"], df_liga["AwayTeam"]]).unique()
 )
 
-col1, col2 = st.columns(2)
-with col1:
-    equipo_local = st.selectbox("🏠 Equipo local", equipos)
-
-with col2:
-    equipo_visitante = st.selectbox(
-        "✈️ Equipo visitante",
-        [e for e in equipos if e != equipo_local]
-    )
+c1, c2 = st.columns(2)
+with c1:
+    local = st.selectbox("🏠 Local", equipos)
+with c2:
+    visitante = st.selectbox("✈️ Visitante", [e for e in equipos if e != local])
 
 st.divider()
 
 # =========================
-# CUOTAS (OPCIONALES)
+# CUOTAS
 # =========================
 st.subheader("💰 Cuotas (opcional)")
-
 c1, c2, c3 = st.columns(3)
-with c1:
-    cuota_local = st.text_input("Local", placeholder="1.85")
-with c2:
-    cuota_empate = st.text_input("Empate", placeholder="3.40")
-with c3:
-    cuota_visitante = st.text_input("Visitante", placeholder="4.20")
 
-def parse_cuota(x):
-    if not x:
-        return None
+def parse(x):
     try:
         return float(x.replace(",", "."))
     except:
         return None
 
-cuota_local = parse_cuota(cuota_local)
-cuota_empate = parse_cuota(cuota_empate)
-cuota_visitante = parse_cuota(cuota_visitante)
+cuota_l = parse(c1.text_input("Local", ""))
+cuota_e = parse(c2.text_input("Empate", ""))
+cuota_v = parse(c3.text_input("Visitante", ""))
 
 # =========================
-# MODELO BASE (FORMA + GOLES)
+# MODELO SIMPLE + FORMA
 # =========================
-def calcular_probabilidades(df, local, visitante):
-    home = df[df["HomeTeam"] == local].tail(20)
-    away = df[df["AwayTeam"] == visitante].tail(20)
+def probs(df, local, visitante):
+    h = df[df["HomeTeam"] == local].tail(20)
+    a = df[df["AwayTeam"] == visitante].tail(20)
 
-    if len(home) < 5 or len(away) < 5:
-        return 0.45, 0.25, 0.30
+    if len(h) < 5 or len(a) < 5:
+        return 0.45, 0.25, 0.30, 0.3
 
-    g_local = home["FTHG"].mean()
-    g_visit = away["FTAG"].mean()
+    gl = h["FTHG"].mean()
+    gv = a["FTAG"].mean()
 
-    total = g_local + g_visit
+    total = gl + gv
     if total == 0:
-        return 0.45, 0.25, 0.30
+        return 0.45, 0.25, 0.30, 0.3
 
-    p_local = g_local / total
-    p_visit = g_visit / total
-    p_emp = max(0.15, 1 - p_local - p_visit)
+    p_l = gl / total
+    p_v = gv / total
+    p_e = max(0.15, 1 - p_l - p_v)
 
-    s = p_local + p_emp + p_visit
-    return p_local/s, p_emp/s, p_visit/s
+    s = p_l + p_e + p_v
+    confianza = min(1, (len(h)+len(a)) / 40)
+
+    return p_l/s, p_e/s, p_v/s, confianza
 
 # =========================
-# BOTÓN PRINCIPAL
+# ANALIZAR
 # =========================
 if st.button("⚽ Analizar partido", use_container_width=True):
 
-    p_local, p_emp, p_visit = calcular_probabilidades(
-        df_liga, equipo_local, equipo_visitante
-    )
+    p_l, p_e, p_v, conf = probs(df_liga, local, visitante)
 
-    st.subheader("📊 Probabilidades 1X2")
-    st.write(f"🏠 Local: **{p_local*100:.2f}%**")
-    st.write(f"➖ Empate: **{p_emp*100:.2f}%**")
-    st.write(f"✈️ Visitante: **{p_visit*100:.2f}%**")
+    st.subheader("📊 Probabilidades")
+    st.write(f"Local: **{p_l*100:.1f}%**")
+    st.write(f"Empate: **{p_e*100:.1f}%**")
+    st.write(f"Visitante: **{p_v*100:.1f}%**")
 
     # =========================
-    # VALUE BET
+    # RECOMENDACIÓN
     # =========================
-    st.subheader("🔥 Value Bet")
-
-    def value(prob, cuota):
-        if prob <= 0 or cuota is None:
-            return None
-        justa = 1 / prob
-        return cuota > justa, justa
+    st.subheader("🔥 Recomendación StrikelyAI")
 
     opciones = [
-        ("Local", p_local, cuota_local),
-        ("Empate", p_emp, cuota_empate),
-        ("Visitante", p_visit, cuota_visitante)
+        ("Local", p_l, cuota_l),
+        ("Empate", p_e, cuota_e),
+        ("Visitante", p_v, cuota_v),
     ]
 
     values = []
     for nombre, prob, cuota in opciones:
-        res = value(prob, cuota)
-        if res:
-            es_value, justa = res
-            if es_value:
-                values.append((nombre, cuota, justa))
+        if cuota and prob >= 0.15:
+            justa = 1 / prob
+            value_pct = (cuota - justa) / justa
+            if value_pct >= 0.05:
+                values.append((nombre, cuota, justa, value_pct))
 
     if values:
-        mejor = max(values, key=lambda x: x[1] - x[2])
+        values.sort(key=lambda x: x[3], reverse=True)
+        mejor = values[0]
+
         st.success(
-            f"✅ Mejor opción: **{mejor[0]}** "
-            f"(Cuota {mejor[1]:.2f} · Justa {mejor[2]:.2f})"
+            f"🥇 **{mejor[0]}** · Cuota {mejor[1]:.2f} · "
+            f"Justa {mejor[2]:.2f} · "
+            f"Value **{mejor[3]*100:.1f}%**"
         )
+
+        if len(values) > 1:
+            st.markdown("**Otras opciones con value:**")
+            for v in values[1:]:
+                st.write(
+                    f"• {v[0]} → {v[3]*100:.1f}%"
+                )
     else:
-        st.info("ℹ️ No se detecta value claro con las cuotas introducidas.")
+        st.info("No se detecta value claro según criterios conservadores.")
+
+    st.caption(f"Confianza del modelo: {conf*100:.0f}%")
 
 # =========================
 # AVISO
 # =========================
 st.divider()
 st.caption(
-    "⚠️ StrikelyAI es una herramienta de análisis estadístico. "
+    "⚠️ StrikelyAI es una herramienta de apoyo estadístico. "
     "No garantiza resultados ni sustituye el criterio del usuario."
 )
