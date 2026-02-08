@@ -1,6 +1,12 @@
 import pandas as pd
-import streamlit as st
 
-@st.cache_data
-def cargar_csv(ruta):
-    return pd.read_csv(ruta)
+def cargar_datos(ruta):
+    df = pd.read_csv(ruta)
+
+    # Normalizar columnas clave
+    columnas_necesarias = ["HomeTeam", "AwayTeam", "FTHG", "FTAG", "Div", "Season"]
+    for col in columnas_necesarias:
+        if col not in df.columns:
+            df[col] = None
+
+    return df
