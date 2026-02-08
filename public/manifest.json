@@ -1,0 +1,22 @@
+{
+  "name": "StrikelyAI",
+  "short_name": "StrikelyAI",
+  "description": "IA avanzada para predicción y value bets en fútbol europeo",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0f172a",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/assets/icono.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/icono.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
