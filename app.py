@@ -39,11 +39,12 @@ st.sidebar.markdown("### 🔐 **MODO DE ACCESO**")
 modo = st.sidebar.radio(
     "",
     ["FREE", "PRO"],
-    captions=["Acceso limitado", "Acceso completo"]
+    captions=["Acceso limitado", "Acceso completo"],
+    key="modo"
 )
 
 # =========================
-# CARGA ROBUSTA DE DATOS
+# CARGA DE DATOS
 # =========================
 @st.cache_data
 def cargar_datos(ruta):
@@ -66,9 +67,6 @@ def cargar_datos(ruta):
                 break
 
     df = df.dropna(subset=["HomeTeam", "AwayTeam", "FTHG", "FTAG", "Div"])
-    if "Date" in df.columns:
-        df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
-
     return df
 
 df = cargar_datos(DATA_PATH)
@@ -96,7 +94,7 @@ df["Liga"] = df["Div"].map(MAPA_LIGAS).fillna(df["Div"])
 # SELECTORES
 # =========================
 st.markdown("### 🏆 **LIGA**")
-liga = st.selectbox("", sorted(df["Liga"].unique()))
+liga = st.selectbox("", sorted(df["Liga"].unique()), key="liga")
 
 df_liga = df[df["Liga"] == liga]
 
@@ -104,11 +102,19 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.markdown("### 🏠 **EQUIPO LOCAL**")
-    local = st.selectbox("", sorted(df_liga["HomeTeam"].unique()))
+    local = st.selectbox(
+        "",
+        sorted(df_liga["HomeTeam"].unique()),
+        key="local"
+    )
 
 with col2:
     st.markdown("### ✈️ **EQUIPO VISITANTE**")
-    visitante = st.selectbox("", sorted(df_liga["AwayTeam"].unique()))
+    visitante = st.selectbox(
+        "",
+        sorted(df_liga["AwayTeam"].unique()),
+        key="visitante"
+    )
 
 st.markdown("---")
 
@@ -120,13 +126,13 @@ st.markdown("### 💸 **CUOTAS 1X2 (OPCIONAL)**")
 c1, cx, c2 = st.columns(3)
 
 with c1:
-    cuota_local = st.text_input("LOCAL")
+    cuota_local = st.text_input("LOCAL", key="cuota_local")
 
 with cx:
-    cuota_empate = st.text_input("EMPATE")
+    cuota_empate = st.text_input("EMPATE", key="cuota_empate")
 
 with c2:
-    cuota_visitante = st.text_input("VISITANTE")
+    cuota_visitante = st.text_input("VISITANTE", key="cuota_visitante")
 
 def parse_cuota(x):
     try:
@@ -186,7 +192,7 @@ def confianza(prob, cuota, justa):
 # ANALIZAR
 # =========================
 st.markdown("---")
-if st.button("🔍 ANALIZAR PARTIDO"):
+if st.button("🔍 ANALIZAR PARTIDO", key="analizar"):
     p1, px, p2 = poisson_1x2(df_liga, local, visitante)
 
     st.markdown("## 📊 **PROBABILIDADES 1X2**")
