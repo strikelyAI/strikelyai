@@ -15,7 +15,7 @@ st.set_page_config(
 )
 
 # =========================
-# RUTAS SEGURAS
+# RUTAS
 # =========================
 BASE_DIR = Path(__file__).resolve().parent
 DATA_PATH = BASE_DIR / "datos" / "europeo.csv"
@@ -30,13 +30,10 @@ st.caption("IA de predicción avanzada de fútbol europeo")
 
 st.sidebar.image(logo, width=120)
 st.sidebar.markdown("### ⚽ StrikelyAI")
-
-st.sidebar.warning(
-    "⚠️ App informativa. No garantiza resultados. Juego responsable."
-)
+st.sidebar.warning("⚠️ App informativa. Juego responsable.")
 
 # =========================
-# MODO USUARIO
+# MODO
 # =========================
 modo = st.sidebar.radio(
     "Modo de acceso",
@@ -45,18 +42,44 @@ modo = st.sidebar.radio(
 )
 
 # =========================
-# CARGA DE DATOS
+# CARGA ROBUSTA DE DATOS
 # =========================
 @st.cache_data
 def cargar_datos(ruta):
     df = pd.read_csv(ruta)
-    df["Date"] = pd.to_datetime(df.get("Date"), errors="coerce")
-    return df.dropna(subset=["HomeTeam", "AwayTeam", "FTHG", "FTAG", "Div"])
+
+    # Normalizar nombres de columnas
+    df.columns = df.columns.str.strip()
+
+    # Mapear posibles nombres
+    columnas_map = {
+        "HomeTeam": ["HomeTeam", "home_team"],
+        "AwayTeam": ["AwayTeam", "away_team"],
+        "FTHG": ["FTHG", "HG", "home_goals"],
+        "FTAG": ["FTAG", "AG", "away_goals"],
+        "Div": ["Div", "League", "Division", "competition"],
+        "Date": ["Date", "date"]
+    }
+
+    for col_std, alternativas in columnas_map.items():
+        for alt in alternativas:
+            if alt in df.columns:
+                df[col_std] = df[alt]
+                break
+
+    # Quedarse solo con filas válidas
+    df = df.dropna(subset=["HomeTeam", "AwayTeam", "FTHG", "FTAG", "Div"])
+
+    # Fecha
+    if "Date" in df.columns:
+        df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
+
+    return df
 
 df = cargar_datos(DATA_PATH)
 
 # =========================
-# MAPA DE LIGAS (NOMBRES REALES)
+# MAPA DE LIGAS
 # =========================
 MAPA_LIGAS = {
     "E0": "Premier League",
@@ -72,8 +95,7 @@ MAPA_LIGAS = {
     "G1": "Super League Greece"
 }
 
-df["Liga"] = df["Div"].map(MAPA_LIGAS)
-df = df.dropna(subset=["Liga"])
+df["Liga"] = df["Div"].map(MAPA_LIGAS).fillna(df["Div"])
 
 # =========================
 # SELECTORES
@@ -122,7 +144,7 @@ def poisson_1x2(df, h, a):
     return p1 / total, px / total, p2 / total
 
 # =========================
-# VALUE BET + CONFIANZA
+# VALUE BET
 # =========================
 def value_bet(prob, cuota):
     if cuota is None or prob <= 0:
@@ -143,7 +165,7 @@ def confianza(prob, cuota, justa):
     return 1
 
 # =========================
-# ANALIZAR PARTIDO
+# ANALIZAR
 # =========================
 if st.button("Analizar partido"):
     p1, px, p2 = poisson_1x2(df_liga, local, visitante)
@@ -176,8 +198,8 @@ if st.button("Analizar partido"):
         st.info("No se detecta value en este partido.")
     else:
         picks = sorted(picks, key=lambda x: x[3], reverse=True)
-
         st.markdown("## 💰 Picks con value")
+
         for i, p in enumerate(picks):
             if modo == "FREE" and (i > 0 or p[3] < 3):
                 st.warning("🔒 Más picks disponibles en PRO")
