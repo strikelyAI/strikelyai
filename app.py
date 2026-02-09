@@ -3,7 +3,7 @@ import pandas as pd
 from pathlib import Path
 
 # ===============================
-# CONFIG PÁGINA
+# CONFIG
 # ===============================
 st.set_page_config(
     page_title="StrikelyAI",
@@ -11,13 +11,44 @@ st.set_page_config(
     layout="centered"
 )
 
-# ===============================
-# LOGO
-# ===============================
 st.image("assets/logo.png", width=180)
 st.markdown("## ⚽ STRIKELYAI — IA DE ANÁLISIS FUTBOLÍSTICO")
-
 st.markdown("---")
+
+# ===============================
+# MAPA DE LIGAS
+# ===============================
+MAPA_LIGAS = {
+    "E0": "Premier League (Inglaterra)",
+    "E1": "Championship (Inglaterra)",
+    "E2": "League One (Inglaterra)",
+    "E3": "League Two (Inglaterra)",
+    "EC": "Conference (Inglaterra)",
+
+    "SP1": "LaLiga (España)",
+    "SP2": "LaLiga Hypermotion (España)",
+
+    "D1": "Bundesliga (Alemania)",
+    "D2": "2. Bundesliga (Alemania)",
+
+    "I1": "Serie A (Italia)",
+    "I2": "Serie B (Italia)",
+
+    "F1": "Ligue 1 (Francia)",
+    "F2": "Ligue 2 (Francia)",
+
+    "N1": "Eredivisie (Países Bajos)",
+    "P1": "Primeira Liga (Portugal)",
+    "B1": "Jupiler Pro League (Bélgica)",
+
+    "SC0": "Premiership (Escocia)",
+    "SC1": "Championship (Escocia)",
+    "SC2": "League One (Escocia)",
+    "SC3": "League Two (Escocia)",
+
+    "T1": "Süper Lig (Turquía)",
+    "G1": "Super League (Grecia)"
+}
 
 # ===============================
 # CARGA DE DATOS
@@ -27,27 +58,15 @@ DATA_PATH = Path("datos/europeo.csv")
 @st.cache_data
 def cargar_datos(path):
     df = pd.read_csv(path)
-
-    # Normalizar nombres de columnas
     df.columns = [c.strip() for c in df.columns]
 
-    # Detectar columna de liga
-    if "Div" in df.columns:
-        df["LIGA"] = df["Div"]
-    elif "League" in df.columns:
-        df["LIGA"] = df["League"]
-    elif "Competition" in df.columns:
-        df["LIGA"] = df["Competition"]
-    else:
-        df["LIGA"] = "EUROPEAN LEAGUE"
+    if "Div" not in df.columns:
+        raise ValueError("El CSV no contiene la columna Div")
 
-    # Columnas mínimas obligatorias
-    required = ["HomeTeam", "AwayTeam", "FTHG", "FTAG", "LIGA"]
-    for col in required:
-        if col not in df.columns:
-            raise ValueError(f"Falta la columna obligatoria: {col}")
+    df["LIGA_CODIGO"] = df["Div"]
+    df["LIGA"] = df["Div"].map(MAPA_LIGAS).fillna(df["Div"])
 
-    return df.dropna(subset=["HomeTeam", "AwayTeam"])
+    return df.dropna(subset=["HomeTeam", "AwayTeam", "FTHG", "FTAG"])
 
 df = cargar_datos(DATA_PATH)
 
@@ -56,11 +75,7 @@ df = cargar_datos(DATA_PATH)
 # ===============================
 st.markdown("### 🏆 LIGA")
 ligas = sorted(df["LIGA"].unique())
-liga_sel = st.selectbox(
-    "SELECCIONA LA LIGA",
-    ligas,
-    key="liga_selector"
-)
+liga_sel = st.selectbox("SELECCIONA LA LIGA", ligas)
 
 df_liga = df[df["LIGA"] == liga_sel]
 
@@ -68,17 +83,17 @@ df_liga = df[df["LIGA"] == liga_sel]
 # SELECTOR DE EQUIPOS
 # ===============================
 st.markdown("### 🏠 EQUIPO LOCAL")
-equipo_local = st.selectbox(
+local = st.selectbox(
     "LOCAL",
     sorted(df_liga["HomeTeam"].unique()),
-    key="local_selector"
+    key="local"
 )
 
 st.markdown("### ✈️ EQUIPO VISITANTE")
-equipo_visitante = st.selectbox(
+visitante = st.selectbox(
     "VISITANTE",
     sorted(df_liga["AwayTeam"].unique()),
-    key="visitante_selector"
+    key="visitante"
 )
 
 st.markdown("---")
@@ -98,7 +113,7 @@ def parse_cuota(x):
         return None
 
 # ===============================
-# BOTÓN PRINCIPAL
+# ANALIZAR
 # ===============================
 if st.button("📊 ANALIZAR PARTIDO"):
 
@@ -106,27 +121,20 @@ if st.button("📊 ANALIZAR PARTIDO"):
     cuota_x = parse_cuota(cx)
     cuota_2 = parse_cuota(c2)
 
-    # Datos históricos del enfrentamiento
     hist = df_liga[
-        (df_liga["HomeTeam"] == equipo_local) &
-        (df_liga["AwayTeam"] == equipo_visitante)
+        (df_liga["HomeTeam"] == local) &
+        (df_liga["AwayTeam"] == visitante)
     ]
 
-    total = len(hist)
-
-    if total == 0:
-        st.warning("⚠️ No hay datos históricos directos. Usando media de liga.")
-        total = len(df_liga)
-
-        p1 = (df_liga["FTHG"] > df_liga["FTAG"]).mean()
-        px = (df_liga["FTHG"] == df_liga["FTAG"]).mean()
-        p2 = (df_liga["FTHG"] < df_liga["FTAG"]).mean()
+    if len(hist) == 0:
+        base = df_liga
     else:
-        p1 = (hist["FTHG"] > hist["FTAG"]).mean()
-        px = (hist["FTHG"] == hist["FTAG"]).mean()
-        p2 = (hist["FTHG"] < hist["FTAG"]).mean()
+        base = hist
 
-    # Normalizar
+    p1 = (base["FTHG"] > base["FTAG"]).mean()
+    px = (base["FTHG"] == base["FTAG"]).mean()
+    p2 = (base["FTHG"] < base["FTAG"]).mean()
+
     s = p1 + px + p2
     p1, px, p2 = p1/s, px/s, p2/s
 
@@ -135,9 +143,6 @@ if st.button("📊 ANALIZAR PARTIDO"):
     st.write(f"🤝 **Empate:** {px*100:.2f}%")
     st.write(f"✈️ **Visitante:** {p2*100:.2f}%")
 
-    # ===============================
-    # VALUE BET
-    # ===============================
     st.markdown("## 🔥 VALUE BET")
 
     def value(prob, cuota):
@@ -151,13 +156,12 @@ if st.button("📊 ANALIZAR PARTIDO"):
         ("EMPATE", px, cuota_x),
         ("VISITANTE", p2, cuota_2),
     ]:
-        res = value(prob, cuota)
-        if res:
-            hay, justa = res
+        r = value(prob, cuota)
+        if r:
+            hay, justa = r
             st.write(
                 f"{nombre}: Cuota justa {justa:.2f} → "
                 f"{'🔥 VALUE' if hay else '❌ SIN VALUE'}"
             )
 
-    st.markdown("---")
-    st.caption("⚠️ Aviso: Esta app es solo informativa. No es consejo de apuesta.")
+    st.caption("⚠️ Uso informativo. No es consejo de apuesta.")
