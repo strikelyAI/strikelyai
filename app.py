@@ -1,150 +1,163 @@
 import streamlit as st
 import pandas as pd
-from PIL import Image
 from pathlib import Path
 
-# ======================
-# CONFIGURACIÓN GENERAL
-# ======================
+# ===============================
+# CONFIG PÁGINA
+# ===============================
 st.set_page_config(
     page_title="StrikelyAI",
     page_icon="assets/icono.png",
     layout="centered"
 )
 
-# ======================
-# MODO OSCURO / CLARO
-# ======================
-modo_oscuro = st.sidebar.toggle("🌙 MODO OSCURO", value=False)
-
-if modo_oscuro:
-    st.markdown("""
-        <style>
-        .stApp { background-color: #0E1117; color: #FAFAFA; }
-        h1, h2, h3, h4, label { color: #FAFAFA; }
-        div[data-baseweb="select"] > div { background-color: #1E222B; }
-        </style>
-    """, unsafe_allow_html=True)
-else:
-    st.markdown("""
-        <style>
-        .stApp { background-color: #FFFFFF; color: #0E1117; }
-        h1, h2, h3, h4, label { color: #0E1117; }
-        </style>
-    """, unsafe_allow_html=True)
-
-# ======================
+# ===============================
 # LOGO
-# ======================
-logo_path = Path("assets/logo.png")
-if logo_path.exists():
-    logo = Image.open(logo_path)
-    st.image(logo, width=220)
+# ===============================
+st.image("assets/logo.png", width=180)
+st.markdown("## ⚽ STRIKELYAI — IA DE ANÁLISIS FUTBOLÍSTICO")
 
-st.markdown("<h1 style='text-align:center;'>⚽ STRIKELYAI</h1>", unsafe_allow_html=True)
-st.markdown("<hr>", unsafe_allow_html=True)
+st.markdown("---")
 
-# ======================
+# ===============================
 # CARGA DE DATOS
-# ======================
-DATA_PATH = "datos/europeo.csv"
+# ===============================
+DATA_PATH = Path("datos/europeo.csv")
 
 @st.cache_data
 def cargar_datos(path):
     df = pd.read_csv(path)
-    columnas_necesarias = ["HomeTeam", "AwayTeam", "FTHG", "FTAG", "Div"]
-    columnas_existentes = [c for c in columnas_necesarias if c in df.columns]
-    return df.dropna(subset=columnas_existentes)
+
+    # Normalizar nombres de columnas
+    df.columns = [c.strip() for c in df.columns]
+
+    # Detectar columna de liga
+    if "Div" in df.columns:
+        df["LIGA"] = df["Div"]
+    elif "League" in df.columns:
+        df["LIGA"] = df["League"]
+    elif "Competition" in df.columns:
+        df["LIGA"] = df["Competition"]
+    else:
+        df["LIGA"] = "EUROPEAN LEAGUE"
+
+    # Columnas mínimas obligatorias
+    required = ["HomeTeam", "AwayTeam", "FTHG", "FTAG", "LIGA"]
+    for col in required:
+        if col not in df.columns:
+            raise ValueError(f"Falta la columna obligatoria: {col}")
+
+    return df.dropna(subset=["HomeTeam", "AwayTeam"])
 
 df = cargar_datos(DATA_PATH)
 
-# ======================
-# MAPEO DE LIGAS
-# ======================
-MAPA_LIGAS = {
-    "E0": "Premier League 🇬🇧",
-    "SP1": "LaLiga 🇪🇸",
-    "D1": "Bundesliga 🇩🇪",
-    "I1": "Serie A 🇮🇹",
-    "F1": "Ligue 1 🇫🇷",
-    "N1": "Eredivisie 🇳🇱",
-    "P1": "Primeira Liga 🇵🇹",
-    "SC0": "Scotland Premiership 🏴",
-    "B1": "Jupiler Pro League 🇧🇪",
-    "T1": "Süper Lig 🇹🇷",
-    "G1": "Super League Greece 🇬🇷"
-}
-
-df["LIGA_NOMBRE"] = df["Div"].map(MAPA_LIGAS)
-df = df.dropna(subset=["LIGA_NOMBRE"])
-
-# ======================
-# SELECTORES
-# ======================
-st.markdown("## 🏆 LIGA")
-liga_nombre = st.selectbox(
-    "",
-    sorted(df["LIGA_NOMBRE"].unique()),
+# ===============================
+# SELECTOR DE LIGA
+# ===============================
+st.markdown("### 🏆 LIGA")
+ligas = sorted(df["LIGA"].unique())
+liga_sel = st.selectbox(
+    "SELECCIONA LA LIGA",
+    ligas,
     key="liga_selector"
 )
 
-liga_div = [k for k, v in MAPA_LIGAS.items() if v == liga_nombre][0]
-df_liga = df[df["Div"] == liga_div]
+df_liga = df[df["LIGA"] == liga_sel]
 
-st.markdown("## 🏠 EQUIPO LOCAL")
-local = st.selectbox(
-    "",
+# ===============================
+# SELECTOR DE EQUIPOS
+# ===============================
+st.markdown("### 🏠 EQUIPO LOCAL")
+equipo_local = st.selectbox(
+    "LOCAL",
     sorted(df_liga["HomeTeam"].unique()),
     key="local_selector"
 )
 
-st.markdown("## ✈️ EQUIPO VISITANTE")
-visitante = st.selectbox(
-    "",
+st.markdown("### ✈️ EQUIPO VISITANTE")
+equipo_visitante = st.selectbox(
+    "VISITANTE",
     sorted(df_liga["AwayTeam"].unique()),
     key="visitante_selector"
 )
 
-# ======================
+st.markdown("---")
+
+# ===============================
 # CUOTAS
-# ======================
-st.markdown("## 💰 CUOTAS")
-c1 = st.text_input("Victoria local")
+# ===============================
+st.markdown("### 💰 CUOTAS (OPCIONAL)")
+c1 = st.text_input("Victoria Local")
 cx = st.text_input("Empate")
-c2 = st.text_input("Victoria visitante")
+c2 = st.text_input("Victoria Visitante")
 
-# ======================
-# BOTÓN ANALIZAR
-# ======================
-if st.button("🔍 ANALIZAR PARTIDO"):
-    st.markdown("### 📊 PROBABILIDADES (MODELO BASE)")
-    st.write("⚠️ Modelo inicial — se irá refinando")
+def parse_cuota(x):
+    try:
+        return float(x.replace(",", "."))
+    except:
+        return None
 
-    prob_local = 0.45
-    prob_empate = 0.25
-    prob_visitante = 0.30
+# ===============================
+# BOTÓN PRINCIPAL
+# ===============================
+if st.button("📊 ANALIZAR PARTIDO"):
 
-    st.metric("🏠 Local", f"{prob_local*100:.1f}%")
-    st.metric("➖ Empate", f"{prob_empate*100:.1f}%")
-    st.metric("✈️ Visitante", f"{prob_visitante*100:.1f}%")
+    cuota_1 = parse_cuota(c1)
+    cuota_x = parse_cuota(cx)
+    cuota_2 = parse_cuota(c2)
+
+    # Datos históricos del enfrentamiento
+    hist = df_liga[
+        (df_liga["HomeTeam"] == equipo_local) &
+        (df_liga["AwayTeam"] == equipo_visitante)
+    ]
+
+    total = len(hist)
+
+    if total == 0:
+        st.warning("⚠️ No hay datos históricos directos. Usando media de liga.")
+        total = len(df_liga)
+
+        p1 = (df_liga["FTHG"] > df_liga["FTAG"]).mean()
+        px = (df_liga["FTHG"] == df_liga["FTAG"]).mean()
+        p2 = (df_liga["FTHG"] < df_liga["FTAG"]).mean()
+    else:
+        p1 = (hist["FTHG"] > hist["FTAG"]).mean()
+        px = (hist["FTHG"] == hist["FTAG"]).mean()
+        p2 = (hist["FTHG"] < hist["FTAG"]).mean()
+
+    # Normalizar
+    s = p1 + px + p2
+    p1, px, p2 = p1/s, px/s, p2/s
+
+    st.markdown("## 📊 PROBABILIDADES 1X2")
+    st.write(f"🏠 **Local:** {p1*100:.2f}%")
+    st.write(f"🤝 **Empate:** {px*100:.2f}%")
+    st.write(f"✈️ **Visitante:** {p2*100:.2f}%")
+
+    # ===============================
+    # VALUE BET
+    # ===============================
+    st.markdown("## 🔥 VALUE BET")
 
     def value(prob, cuota):
-        try:
-            cuota = float(cuota.replace(",", "."))
-            justa = round(1 / prob, 2)
-            return cuota > justa, justa
-        except:
-            return False, None
+        if cuota is None or prob <= 0:
+            return None
+        justa = 1 / prob
+        return cuota > justa, justa
 
-    st.markdown("### 🔥 VALUE BETS")
     for nombre, prob, cuota in [
-        ("Local", prob_local, c1),
-        ("Empate", prob_empate, cx),
-        ("Visitante", prob_visitante, c2),
+        ("LOCAL", p1, cuota_1),
+        ("EMPATE", px, cuota_x),
+        ("VISITANTE", p2, cuota_2),
     ]:
-        hay, justa = value(prob, cuota)
-        if justa:
-            st.write(f"**{nombre}** → Cuota justa {justa} {'🔥 VALUE' if hay else '❌ NO VALUE'}")
+        res = value(prob, cuota)
+        if res:
+            hay, justa = res
+            st.write(
+                f"{nombre}: Cuota justa {justa:.2f} → "
+                f"{'🔥 VALUE' if hay else '❌ SIN VALUE'}"
+            )
 
     st.markdown("---")
-    st.caption("🔞 +18 | Herramienta informativa. Juega con responsabilidad.")
+    st.caption("⚠️ Aviso: Esta app es solo informativa. No es consejo de apuesta.")
