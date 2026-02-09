@@ -25,18 +25,19 @@ DATA_PATH = BASE_DIR / "datos" / "europeo.csv"
 # =========================
 logo = Image.open(BASE_DIR / "assets" / "logo.png")
 st.image(logo, width=150)
-st.title("StrikelyAI")
+st.markdown("## ⚽ **STRIKELYAI**")
 st.caption("IA de predicción avanzada de fútbol europeo")
 
 st.sidebar.image(logo, width=120)
-st.sidebar.markdown("### ⚽ StrikelyAI")
+st.sidebar.markdown("## ⚽ **STRIKELYAI**")
 st.sidebar.warning("⚠️ App informativa. Juego responsable.")
 
 # =========================
 # MODO
 # =========================
+st.sidebar.markdown("### 🔐 **MODO DE ACCESO**")
 modo = st.sidebar.radio(
-    "Modo de acceso",
+    "",
     ["FREE", "PRO"],
     captions=["Acceso limitado", "Acceso completo"]
 )
@@ -47,11 +48,8 @@ modo = st.sidebar.radio(
 @st.cache_data
 def cargar_datos(ruta):
     df = pd.read_csv(ruta)
-
-    # Normalizar nombres de columnas
     df.columns = df.columns.str.strip()
 
-    # Mapear posibles nombres
     columnas_map = {
         "HomeTeam": ["HomeTeam", "home_team"],
         "AwayTeam": ["AwayTeam", "away_team"],
@@ -67,10 +65,7 @@ def cargar_datos(ruta):
                 df[col_std] = df[alt]
                 break
 
-    # Quedarse solo con filas válidas
     df = df.dropna(subset=["HomeTeam", "AwayTeam", "FTHG", "FTAG", "Div"])
-
-    # Fecha
     if "Date" in df.columns:
         df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
 
@@ -100,15 +95,38 @@ df["Liga"] = df["Div"].map(MAPA_LIGAS).fillna(df["Div"])
 # =========================
 # SELECTORES
 # =========================
-liga = st.selectbox("Liga", sorted(df["Liga"].unique()))
+st.markdown("### 🏆 **LIGA**")
+liga = st.selectbox("", sorted(df["Liga"].unique()))
+
 df_liga = df[df["Liga"] == liga]
 
-local = st.selectbox("Equipo local", sorted(df_liga["HomeTeam"].unique()))
-visitante = st.selectbox("Equipo visitante", sorted(df_liga["AwayTeam"].unique()))
+col1, col2 = st.columns(2)
 
-c1 = st.text_input("Cuota Local")
-cx = st.text_input("Cuota Empate")
-c2 = st.text_input("Cuota Visitante")
+with col1:
+    st.markdown("### 🏠 **EQUIPO LOCAL**")
+    local = st.selectbox("", sorted(df_liga["HomeTeam"].unique()))
+
+with col2:
+    st.markdown("### ✈️ **EQUIPO VISITANTE**")
+    visitante = st.selectbox("", sorted(df_liga["AwayTeam"].unique()))
+
+st.markdown("---")
+
+# =========================
+# CUOTAS
+# =========================
+st.markdown("### 💸 **CUOTAS 1X2 (OPCIONAL)**")
+
+c1, cx, c2 = st.columns(3)
+
+with c1:
+    cuota_local = st.text_input("LOCAL")
+
+with cx:
+    cuota_empate = st.text_input("EMPATE")
+
+with c2:
+    cuota_visitante = st.text_input("VISITANTE")
 
 def parse_cuota(x):
     try:
@@ -167,18 +185,19 @@ def confianza(prob, cuota, justa):
 # =========================
 # ANALIZAR
 # =========================
-if st.button("Analizar partido"):
+st.markdown("---")
+if st.button("🔍 ANALIZAR PARTIDO"):
     p1, px, p2 = poisson_1x2(df_liga, local, visitante)
 
-    st.subheader("📊 Probabilidades 1X2")
-    st.write(f"Local: {p1*100:.2f}%")
-    st.write(f"Empate: {px*100:.2f}%")
-    st.write(f"Visitante: {p2*100:.2f}%")
+    st.markdown("## 📊 **PROBABILIDADES 1X2**")
+    st.write(f"🏠 Local: **{p1*100:.2f}%**")
+    st.write(f"➖ Empate: **{px*100:.2f}%**")
+    st.write(f"✈️ Visitante: **{p2*100:.2f}%**")
 
     cuotas = {
-        "Local": parse_cuota(c1),
-        "Empate": parse_cuota(cx),
-        "Visitante": parse_cuota(c2)
+        "Local": parse_cuota(cuota_local),
+        "Empate": parse_cuota(cuota_empate),
+        "Visitante": parse_cuota(cuota_visitante)
     }
 
     probs = {
@@ -195,10 +214,10 @@ if st.button("Analizar partido"):
             picks.append((k, cuotas[k], justa, conf))
 
     if not picks:
-        st.info("No se detecta value en este partido.")
+        st.info("ℹ️ No se detecta value en este partido.")
     else:
         picks = sorted(picks, key=lambda x: x[3], reverse=True)
-        st.markdown("## 💰 Picks con value")
+        st.markdown("## 💰 **VALUE BET DETECTADO**")
 
         for i, p in enumerate(picks):
             if modo == "FREE" and (i > 0 or p[3] < 3):
@@ -207,5 +226,5 @@ if st.button("Analizar partido"):
 
             estrellas = "⭐" * p[3]
             st.success(
-                f"{p[0]} | Cuota {p[1]} | Justa {p[2]:.2f} | Confianza {estrellas}"
+                f"**{p[0].upper()}** | Cuota {p[1]} | Justa {p[2]:.2f} | Confianza {estrellas}"
             )
