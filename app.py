@@ -3,7 +3,7 @@ import pandas as pd
 from pathlib import Path
 
 # ===============================
-# CONFIG
+# CONFIGURACIÓN
 # ===============================
 st.set_page_config(
     page_title="StrikelyAI",
@@ -16,7 +16,7 @@ st.markdown("## ⚽ STRIKELYAI — IA DE ANÁLISIS FUTBOLÍSTICO")
 st.markdown("---")
 
 # ===============================
-# MAPA DE LIGAS
+# MAPA DE LIGAS (CÓDIGOS → NOMBRES)
 # ===============================
 MAPA_LIGAS = {
     "E0": "Premier League (Inglaterra)",
@@ -51,7 +51,7 @@ MAPA_LIGAS = {
 }
 
 # ===============================
-# CARGA DE DATOS
+# CARGA DE DATOS (BLINDADA)
 # ===============================
 DATA_PATH = Path("datos/europeo.csv")
 
@@ -60,13 +60,21 @@ def cargar_datos(path):
     df = pd.read_csv(path)
     df.columns = [c.strip() for c in df.columns]
 
-    if "Div" not in df.columns:
-        raise ValueError("El CSV no contiene la columna Div")
+    # Detectar columna de liga automáticamente
+    posibles_ligas = ["Div", "League", "LeagueCode", "Competition"]
+    col_liga = next((c for c in posibles_ligas if c in df.columns), None)
 
-    df["LIGA_CODIGO"] = df["Div"]
-    df["LIGA"] = df["Div"].map(MAPA_LIGAS).fillna(df["Div"])
+    if col_liga is None:
+        st.error("❌ No se encontró ninguna columna de liga en el CSV")
+        st.stop()
 
-    return df.dropna(subset=["HomeTeam", "AwayTeam", "FTHG", "FTAG"])
+    df["LIGA_CODIGO"] = df[col_liga].astype(str)
+    df["LIGA"] = df["LIGA_CODIGO"].map(MAPA_LIGAS).fillna(df["LIGA_CODIGO"])
+
+    columnas_necesarias = ["HomeTeam", "AwayTeam", "FTHG", "FTAG"]
+    df = df.dropna(subset=columnas_necesarias)
+
+    return df
 
 df = cargar_datos(DATA_PATH)
 
@@ -113,7 +121,7 @@ def parse_cuota(x):
         return None
 
 # ===============================
-# ANALIZAR
+# ANÁLISIS
 # ===============================
 if st.button("📊 ANALIZAR PARTIDO"):
 
@@ -121,22 +129,18 @@ if st.button("📊 ANALIZAR PARTIDO"):
     cuota_x = parse_cuota(cx)
     cuota_2 = parse_cuota(c2)
 
-    hist = df_liga[
-        (df_liga["HomeTeam"] == local) &
-        (df_liga["AwayTeam"] == visitante)
-    ]
-
-    if len(hist) == 0:
-        base = df_liga
-    else:
-        base = hist
+    base = df_liga
 
     p1 = (base["FTHG"] > base["FTAG"]).mean()
     px = (base["FTHG"] == base["FTAG"]).mean()
     p2 = (base["FTHG"] < base["FTAG"]).mean()
 
-    s = p1 + px + p2
-    p1, px, p2 = p1/s, px/s, p2/s
+    total = p1 + px + p2
+    if total == 0:
+        st.error("No hay datos suficientes")
+        st.stop()
+
+    p1, px, p2 = p1/total, px/total, p2/total
 
     st.markdown("## 📊 PROBABILIDADES 1X2")
     st.write(f"🏠 **Local:** {p1*100:.2f}%")
