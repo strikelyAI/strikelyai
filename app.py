@@ -2,57 +2,71 @@ import streamlit as st
 import pandas as pd
 from pathlib import Path
 
-# ===============================
-# CONFIGURACIÓN
-# ===============================
+# ======================================================
+# CONFIGURACIÓN GENERAL
+# ======================================================
 st.set_page_config(
     page_title="StrikelyAI",
     page_icon="assets/icono.png",
     layout="centered"
 )
 
+# ======================================================
+# MODO CLARO / OSCURO
+# ======================================================
+modo = st.toggle("🌙 Modo oscuro", value=False)
+
+if modo:
+    st.markdown(
+        """
+        <style>
+        body, .stApp {
+            background-color: #0E1117;
+            color: #FAFAFA;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+# ======================================================
+# LOGO + TÍTULO
+# ======================================================
 st.image("assets/logo.png", width=180)
-st.markdown("## ⚽ STRIKELYAI — IA DE ANÁLISIS FUTBOLÍSTICO")
+st.markdown("## ⚽ **STRIKELYAI**")
+st.markdown("### IA de análisis y probabilidades de fútbol")
 st.markdown("---")
 
-# ===============================
-# MAPA DE LIGAS (CÓDIGOS → NOMBRES)
-# ===============================
+# ======================================================
+# MAPA DE LIGAS
+# ======================================================
 MAPA_LIGAS = {
     "E0": "Premier League (Inglaterra)",
     "E1": "Championship (Inglaterra)",
     "E2": "League One (Inglaterra)",
     "E3": "League Two (Inglaterra)",
-    "EC": "Conference (Inglaterra)",
-
     "SP1": "LaLiga (España)",
     "SP2": "LaLiga Hypermotion (España)",
-
     "D1": "Bundesliga (Alemania)",
     "D2": "2. Bundesliga (Alemania)",
-
     "I1": "Serie A (Italia)",
     "I2": "Serie B (Italia)",
-
     "F1": "Ligue 1 (Francia)",
     "F2": "Ligue 2 (Francia)",
-
     "N1": "Eredivisie (Países Bajos)",
     "P1": "Primeira Liga (Portugal)",
     "B1": "Jupiler Pro League (Bélgica)",
-
     "SC0": "Premiership (Escocia)",
     "SC1": "Championship (Escocia)",
     "SC2": "League One (Escocia)",
     "SC3": "League Two (Escocia)",
-
     "T1": "Süper Lig (Turquía)",
     "G1": "Super League (Grecia)"
 }
 
-# ===============================
-# CARGA DE DATOS (BLINDADA)
-# ===============================
+# ======================================================
+# CARGA DE DATOS (ROBUSTA)
+# ======================================================
 DATA_PATH = Path("datos/europeo.csv")
 
 @st.cache_data
@@ -60,56 +74,56 @@ def cargar_datos(path):
     df = pd.read_csv(path)
     df.columns = [c.strip() for c in df.columns]
 
-    # Detectar columna de liga automáticamente
-    posibles_ligas = ["Div", "League", "LeagueCode", "Competition"]
-    col_liga = next((c for c in posibles_ligas if c in df.columns), None)
+    posibles = ["Div", "League", "LeagueCode", "Competition"]
+    col_liga = next((c for c in posibles if c in df.columns), None)
 
     if col_liga is None:
-        st.error("❌ No se encontró ninguna columna de liga en el CSV")
+        st.error("❌ No se encontró columna de liga en el dataset")
         st.stop()
 
     df["LIGA_CODIGO"] = df[col_liga].astype(str)
     df["LIGA"] = df["LIGA_CODIGO"].map(MAPA_LIGAS).fillna(df["LIGA_CODIGO"])
 
-    columnas_necesarias = ["HomeTeam", "AwayTeam", "FTHG", "FTAG"]
-    df = df.dropna(subset=columnas_necesarias)
-
+    df = df.dropna(subset=["HomeTeam", "AwayTeam", "FTHG", "FTAG"])
     return df
 
 df = cargar_datos(DATA_PATH)
 
-# ===============================
+# ======================================================
 # SELECTOR DE LIGA
-# ===============================
-st.markdown("### 🏆 LIGA")
-ligas = sorted(df["LIGA"].unique())
-liga_sel = st.selectbox("SELECCIONA LA LIGA", ligas)
+# ======================================================
+st.markdown("### 🏆 **LIGA**")
+liga = st.selectbox(
+    "Selecciona la liga",
+    sorted(df["LIGA"].unique()),
+    key="liga_selector"
+)
 
-df_liga = df[df["LIGA"] == liga_sel]
+df_liga = df[df["LIGA"] == liga]
 
-# ===============================
+# ======================================================
 # SELECTOR DE EQUIPOS
-# ===============================
-st.markdown("### 🏠 EQUIPO LOCAL")
+# ======================================================
+st.markdown("### 🏠 **EQUIPO LOCAL**")
 local = st.selectbox(
-    "LOCAL",
+    "Local",
     sorted(df_liga["HomeTeam"].unique()),
-    key="local"
+    key="local_selector"
 )
 
-st.markdown("### ✈️ EQUIPO VISITANTE")
+st.markdown("### ✈️ **EQUIPO VISITANTE**")
 visitante = st.selectbox(
-    "VISITANTE",
+    "Visitante",
     sorted(df_liga["AwayTeam"].unique()),
-    key="visitante"
+    key="visitante_selector"
 )
 
-st.markdown("---")
-
-# ===============================
+# ======================================================
 # CUOTAS
-# ===============================
-st.markdown("### 💰 CUOTAS (OPCIONAL)")
+# ======================================================
+st.markdown("---")
+st.markdown("### 💰 **CUOTAS (opcional)**")
+
 c1 = st.text_input("Victoria Local")
 cx = st.text_input("Empate")
 c2 = st.text_input("Victoria Visitante")
@@ -120,9 +134,9 @@ def parse_cuota(x):
     except:
         return None
 
-# ===============================
-# ANÁLISIS
-# ===============================
+# ======================================================
+# BOTÓN DE ANÁLISIS
+# ======================================================
 if st.button("📊 ANALIZAR PARTIDO"):
 
     cuota_1 = parse_cuota(c1)
@@ -137,17 +151,17 @@ if st.button("📊 ANALIZAR PARTIDO"):
 
     total = p1 + px + p2
     if total == 0:
-        st.error("No hay datos suficientes")
+        st.error("No hay datos suficientes para calcular probabilidades")
         st.stop()
 
     p1, px, p2 = p1/total, px/total, p2/total
 
-    st.markdown("## 📊 PROBABILIDADES 1X2")
-    st.write(f"🏠 **Local:** {p1*100:.2f}%")
-    st.write(f"🤝 **Empate:** {px*100:.2f}%")
-    st.write(f"✈️ **Visitante:** {p2*100:.2f}%")
+    st.markdown("## 📊 **PROBABILIDADES 1X2**")
+    st.write(f"🏠 Local: **{p1*100:.2f}%**")
+    st.write(f"🤝 Empate: **{px*100:.2f}%**")
+    st.write(f"✈️ Visitante: **{p2*100:.2f}%**")
 
-    st.markdown("## 🔥 VALUE BET")
+    st.markdown("## 🔥 **VALUE BET**")
 
     def value(prob, cuota):
         if cuota is None or prob <= 0:
@@ -164,8 +178,16 @@ if st.button("📊 ANALIZAR PARTIDO"):
         if r:
             hay, justa = r
             st.write(
-                f"{nombre}: Cuota justa {justa:.2f} → "
+                f"**{nombre}** → Cuota justa {justa:.2f} "
                 f"{'🔥 VALUE' if hay else '❌ SIN VALUE'}"
             )
 
-    st.caption("⚠️ Uso informativo. No es consejo de apuesta.")
+# ======================================================
+# AVISO LEGAL
+# ======================================================
+st.markdown("---")
+st.caption(
+    "⚠️ **Aviso legal**: StrikelyAI es una herramienta informativa basada en datos "
+    "históricos. No constituye consejo de inversión ni recomendación de apuestas. "
+    "El uso de esta aplicación es responsabilidad exclusiva del usuario."
+)
