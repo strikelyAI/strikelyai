@@ -1,224 +1,168 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from scipy.stats import poisson
-import plotly.graph_objects as go
-import os
+from math import exp, factorial
 
-# =========================
-# CONFIG
-# =========================
+# ==========================================
+# CONFIGURACIÓN
+# ==========================================
+
 st.set_page_config(
     page_title="StrikelyAI",
-    page_icon="assets/icono.png",
     layout="centered"
 )
 
-# =========================
-# DARK MODE TOGGLE
-# =========================
-dark_mode = st.toggle("🌙 Dark Mode")
+# ==========================================
+# ESTILO VISUAL PREMIUM
+# ==========================================
 
-if dark_mode:
-    bg = "#0f172a"
-    card_bg = "#1e293b"
-    text_color = "white"
-else:
-    bg = "#ffffff"
-    card_bg = "#f8fafc"
-    text_color = "#0f172a"
-
-st.markdown(f"""
+st.markdown("""
 <style>
-body {{ background-color: {bg}; color: {text_color}; }}
-
-.block-container {{
-    padding-top: 1.5rem;
-}}
-
-.card {{
-    background: {card_bg};
-    padding: 1.5rem;
-    border-radius: 18px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-    margin-bottom: 1.5rem;
-}}
-
-div.stButton > button {{
-    width: 100%;
-    height: 3.5em;
-    font-size: 18px;
-    font-weight: 700;
-    border-radius: 12px;
-    background-color: #0f172a;
-    color: white;
-    border: none;
-}}
-
-h2, h3 {{
-    font-weight: 800;
-}}
+body { background-color: #ffffff; }
+h1, h2, h3 { color: #0A1F44; font-weight: 800; }
+.block-container { padding-top: 2rem; }
+.stSelectbox label, .stTextInput label { font-weight: 700; }
+footer { visibility: hidden; }
 </style>
 """, unsafe_allow_html=True)
 
-st.title("⚽ STRIKELYAI")
+# ==========================================
+# CARGA DE DATOS ROBUSTA
+# ==========================================
 
-# =========================
-# DATA
-# =========================
 DATA_PATH = "datos/europeo.csv"
 
 @st.cache_data
 def cargar_datos(path):
     df = pd.read_csv(path)
+    
     required = ["HomeTeam","AwayTeam","FTHG","FTAG"]
     for col in required:
         if col not in df.columns:
-            raise ValueError(f"Falta columna {col}")
-    return df
+            raise ValueError(f"Falta columna obligatoria: {col}")
+    
+    if "Div" not in df.columns:
+        df["Div"] = "Liga Desconocida"
+        
+    return df.dropna(subset=["HomeTeam","AwayTeam","FTHG","FTAG"])
 
 df = cargar_datos(DATA_PATH)
 
-# =========================
+# ==========================================
 # MAPA LIGAS
-# =========================
+# ==========================================
+
 MAPA_LIGAS = {
-    "E0":"Premier League",
-    "SP1":"La Liga",
-    "D1":"Bundesliga",
-    "I1":"Serie A",
-    "F1":"Ligue 1",
-    "P1":"Primeira Liga",
-    "N1":"Eredivisie",
-    "B1":"Belgian Pro League",
-    "SC0":"Scottish Premiership",
-    "T1":"Turkish Super Lig",
-    "G1":"Greek Super League"
+    "E0": "Premier League",
+    "SP1": "La Liga",
+    "D1": "Bundesliga",
+    "I1": "Serie A",
+    "F1": "Ligue 1",
+    "N1": "Eredivisie",
+    "P1": "Liga Portugal"
 }
 
-if "Div" in df.columns:
-    df["LIGA_NOMBRE"] = df["Div"].map(MAPA_LIGAS).fillna(df["Div"])
-else:
-    df["LIGA_NOMBRE"] = "Liga"
+df["LIGA_NOMBRE"] = df["Div"].map(MAPA_LIGAS).fillna(df["Div"])
 
-ligas = sorted(df["LIGA_NOMBRE"].unique())
+# ==========================================
+# FUNCIONES MODELO
+# ==========================================
 
-# =========================
-# SELECTORES
-# =========================
-st.markdown('<div class="card">', unsafe_allow_html=True)
+def poisson(lmbda, k):
+    return (lmbda**k * exp(-lmbda)) / factorial(k)
 
-liga = st.selectbox("🏆 LIGA", ligas)
+def calcular_forma(df, equipo, local=True):
+    ultimos = df[(df["HomeTeam"] == equipo) | (df["AwayTeam"] == equipo)].tail(5)
+    puntos = 0
+    for _, row in ultimos.iterrows():
+        if row["HomeTeam"] == equipo:
+            if row["FTHG"] > row["FTAG"]: puntos += 3
+            elif row["FTHG"] == row["FTAG"]: puntos += 1
+        else:
+            if row["FTAG"] > row["FTHG"]: puntos += 3
+            elif row["FTAG"] == row["FTHG"]: puntos += 1
+    return puntos / 15
+
+def modelo_probabilidades(df_liga, local, visitante):
+    media_local = df_liga[df_liga["HomeTeam"] == local]["FTHG"].mean()
+    media_visit = df_liga[df_liga["AwayTeam"] == visitante]["FTAG"].mean()
+    
+    forma_local = calcular_forma(df_liga, local)
+    forma_visit = calcular_forma(df_liga, visitante)
+    
+    lambda_local = media_local * (1 + forma_local*0.3)
+    lambda_visit = media_visit * (1 + forma_visit*0.3)
+    
+    max_goles = 5
+    prob_local = 0
+    prob_empate = 0
+    prob_visit = 0
+    
+    for i in range(max_goles):
+        for j in range(max_goles):
+            p = poisson(lambda_local,i) * poisson(lambda_visit,j)
+            if i > j: prob_local += p
+            elif i == j: prob_empate += p
+            else: prob_visit += p
+    
+    total = prob_local + prob_empate + prob_visit
+    return prob_local/total, prob_empate/total, prob_visit/total, lambda_local, lambda_visit
+
+def value_bet(prob, cuota):
+    justa = 1 / prob
+    return cuota > justa, justa
+
+# ==========================================
+# INTERFAZ
+# ==========================================
+
+st.title("⚽ STRIKELYAI")
+
+liga = st.selectbox("🏆 LIGA", sorted(df["LIGA_NOMBRE"].unique()), key="liga_select")
+
 df_liga = df[df["LIGA_NOMBRE"] == liga]
 
-local = st.selectbox("🏠 EQUIPO LOCAL", sorted(df_liga["HomeTeam"].unique()))
-visitante = st.selectbox("✈️ EQUIPO VISITANTE", sorted(df_liga["AwayTeam"].unique()))
+local = st.selectbox("🏠 EQUIPO LOCAL", sorted(df_liga["HomeTeam"].unique()), key="local_select")
+visitante = st.selectbox("✈️ EQUIPO VISITANTE", sorted(df_liga["AwayTeam"].unique()), key="visit_select")
 
-st.markdown('</div>', unsafe_allow_html=True)
+st.markdown("### 💰 CUOTAS")
 
-# =========================
-# CUOTAS
-# =========================
-st.markdown('<div class="card">', unsafe_allow_html=True)
+cuota_local = st.number_input("Cuota Local", min_value=1.01, value=1.80)
+cuota_empate = st.number_input("Cuota Empate", min_value=1.01, value=3.50)
+cuota_visit = st.number_input("Cuota Visitante", min_value=1.01, value=4.00)
 
-cuota_local = st.text_input("Cuota Local")
-cuota_empate = st.text_input("Cuota Empate")
-cuota_visitante = st.text_input("Cuota Visitante")
+if st.button("🔍 ANALIZAR PARTIDO"):
+    
+    prob_l, prob_e, prob_v, xg_l, xg_v = modelo_probabilidades(df_liga, local, visitante)
+    
+    st.markdown("## 📊 PROBABILIDADES")
+    st.write(f"Local: {prob_l*100:.2f}%")
+    st.write(f"Empate: {prob_e*100:.2f}%")
+    st.write(f"Visitante: {prob_v*100:.2f}%")
+    
+    st.markdown("## 🎯 xG ESTIMADO")
+    st.write(f"xG Local: {xg_l:.2f}")
+    st.write(f"xG Visitante: {xg_v:.2f}")
+    
+    val_l, justa_l = value_bet(prob_l, cuota_local)
+    val_e, justa_e = value_bet(prob_e, cuota_empate)
+    val_v, justa_v = value_bet(prob_v, cuota_visit)
+    
+    st.markdown("## 💎 VALUE BET")
+    
+    if val_l:
+        st.success(f"🔥 VALUE LOCAL (Justa {justa_l:.2f})")
+    if val_e:
+        st.success(f"🔥 VALUE EMPATE (Justa {justa_e:.2f})")
+    if val_v:
+        st.success(f"🔥 VALUE VISITANTE (Justa {justa_v:.2f})")
+    
+    if not any([val_l,val_e,val_v]):
+        st.warning("No hay value claro en este partido.")
 
-st.markdown('</div>', unsafe_allow_html=True)
-
-# =========================
-# MODELO POISSON
-# =========================
-def medias_equipo(df, equipo):
-    gf = df[df["HomeTeam"] == equipo]["FTHG"].mean()
-    gc = df[df["AwayTeam"] == equipo]["FTAG"].mean()
-    return gf, gc
-
-def probabilidades(df, local, visitante):
-    gf_l, gc_l = medias_equipo(df, local)
-    gf_v, gc_v = medias_equipo(df, visitante)
-
-    lambda_l = (gf_l + gc_v)/2
-    lambda_v = (gf_v + gc_l)/2
-
-    p_l = p_e = p_v = 0
-
-    for i in range(6):
-        for j in range(6):
-            p = poisson.pmf(i, lambda_l)*poisson.pmf(j, lambda_v)
-            if i>j: p_l+=p
-            elif i==j: p_e+=p
-            else: p_v+=p
-
-    total = p_l+p_e+p_v
-    return p_l/total, p_e/total, p_v/total
-
-def calcular_value(prob, cuota):
-    if cuota == "":
-        return None
-    cuota = float(cuota.replace(",","."))
-    justa = 1/prob
-    return cuota>justa, justa
-
-# =========================
-# ANALIZAR
-# =========================
-if st.button("ANALIZAR PARTIDO"):
-
-    if local == visitante:
-        st.error("Selecciona equipos distintos")
-    else:
-        p_l, p_e, p_v = probabilidades(df_liga, local, visitante)
-
-        # -------- PROBABILIDADES
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.subheader("📊 PROBABILIDADES")
-
-        st.progress(int(max(p_l,p_e,p_v)*100))
-
-        fig = go.Figure()
-        fig.add_trace(go.Bar(
-            x=["Local","Empate","Visitante"],
-            y=[p_l*100,p_e*100,p_v*100]
-        ))
-        fig.update_layout(
-            template="plotly_dark" if dark_mode else "plotly_white",
-            height=350
-        )
-        st.plotly_chart(fig, use_container_width=True)
-
-        st.write(f"Local: {p_l*100:.2f}%")
-        st.write(f"Empate: {p_e*100:.2f}%")
-        st.write(f"Visitante: {p_v*100:.2f}%")
-        st.markdown('</div>', unsafe_allow_html=True)
-
-        # -------- VALUE
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.subheader("💰 VALUE")
-
-        v_l = calcular_value(p_l, cuota_local)
-        v_e = calcular_value(p_e, cuota_empate)
-        v_v = calcular_value(p_v, cuota_visitante)
-
-        mejores = []
-
-        if v_l and v_l[0]:
-            mejores.append(("Local", cuota_local, v_l[1]))
-        if v_e and v_e[0]:
-            mejores.append(("Empate", cuota_empate, v_e[1]))
-        if v_v and v_v[0]:
-            mejores.append(("Visitante", cuota_visitante, v_v[1]))
-
-        if mejores:
-            st.success(f"🔥 Mejor opción: {mejores[0][0]} (Cuota {mejores[0][1]} · Justa {mejores[0][2]:.2f})")
-        else:
-            st.info("No se detecta value claro.")
-
-        st.markdown('</div>', unsafe_allow_html=True)
-
-# =========================
+# ==========================================
 # AVISO LEGAL
-# =========================
+# ==========================================
+
 st.markdown("---")
-st.caption("⚠️ StrikelyAI ofrece análisis estadístico basado en datos históricos. No garantiza resultados ni promueve apuestas irresponsables.")
+st.caption("⚠️ StrikelyAI es una herramienta estadística. No garantiza resultados. Apostar implica riesgo.")
